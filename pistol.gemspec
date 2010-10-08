@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email = ["michel@soveran.com", "djanowski@dimaion.com",
              "cyx@pipetodevnull.com"]
   s.homepage = "http://github.com/monk/pistol"
-  s.files = ["lib/pistol.rb", "LICENSE", "Rakefile", "test/fixtures/helloworld/app/article.rb", "test/fixtures/helloworld/app.rb", "test/fixtures/helloworld/lib/article.rb", "test/fixtures/helloworld/lib/book.rb", "test/helper.rb", "test/pistol_test.rb", "test/sinatra_test.rb"]
+  s.files = ["lib/pistol.rb", "README.markdown", "LICENSE", "Rakefile", "test/fixtures/helloworld/app/article.rb", "test/fixtures/helloworld/app.rb", "test/fixtures/helloworld/lib/article.rb", "test/fixtures/helloworld/lib/book.rb", "test/helper.rb", "test/pistol_test.rb", "test/sinatra_test.rb"]
 
   s.rubyforge_project = "pistol"
   s.add_development_dependency "cutest", "~> 1.0"
