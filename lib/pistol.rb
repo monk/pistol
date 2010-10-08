@@ -13,7 +13,7 @@ class Pistol
   def call(env)
     current = last_mtime
 
-    if current >= @last
+    if current > @last
       if Thread.list.size > 1
         Thread.exclusive { reload! }
       else

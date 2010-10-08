@@ -1,5 +1,6 @@
 require "cutest"
 require "open-uri"
+require "fileutils"
 
 TEST_SERVER = "http://localhost:9595"
 
@@ -15,19 +16,13 @@ private
 
   def modify(file, old, new)
     path = app_root(file)
-
     prev = File.read(path)
     change(path, prev.gsub(old, new))
+    sleep 1
     FileUtils.touch(path)
-
     yield
   ensure
     change(app_root(file), prev)
-  end
-
-  def updated(file)
-    FileUtils.touch(app_root(file))
-    yield
   end
 
   def change(file, data)
