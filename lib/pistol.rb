@@ -1,18 +1,19 @@
 class Pistol
+  VERSION = "0.0.1"
+
   attr :options
 
   def initialize(app, options = {})
-    @options = options
-    @options[:files] ||= Dir["./app/**/*.rb"]
-
-    @app  = app
-    @last = last_mtime
+    @options  = optimize_options(options)
+    @app      = app
+    @app_file = options[:files].first
+    @last     = last_mtime
   end
 
   def call(env)
     current = last_mtime
 
-    if current > @last
+    if current >= @last
       if Thread.list.size > 1
         Thread.exclusive { reload! }
       else
@@ -25,21 +26,22 @@ class Pistol
     @app.call(env)
   end
 
+private
   def reload!
-    options[:files].each do |file|
-      $LOADED_FEATURES.delete(File.expand_path(file))
-    end
+    options[:files].each { |file| $LOADED_FEATURES.delete(file) }
 
     @app.class.reset! if @app.class.respond_to?(:reset!)
-  
-    require File.expand_path(options[:files].first)
+    require @app_file
   end
 
-  # Returns the timestamp of the most recently modified file.
   def last_mtime
-    options[:files].map do |file|
-      ::File.stat(file).mtime
-    end.max
+    options[:files].map { |file| ::File.mtime(file) }.max
+  end
+
+  def optimize_options(options)
+    opts = options.dup
+    opts[:files] ||= Dir["./app/**/*.rb"]
+    opts[:files].map! { |file| File.expand_path(file) }
+    opts
   end
 end
-
