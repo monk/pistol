@@ -2,20 +2,18 @@ require "cutest"
 require "open-uri"
 require "fileutils"
 
-TEST_SERVER = "http://localhost:9595"
-
-module Kernel
-private
-  def get(path)
-    open([TEST_SERVER, path].join).read
+class Cutest::Scope
+  def get(server, path)
+    open([server, path].join).read
   end
 
   def app_root(*args)
-    File.join(File.dirname(__FILE__), "fixtures", "helloworld", *args)
+    File.join(File.dirname(__FILE__), "fixtures", app_name, *args)
   end
 
   def modify(file, old, new)
     path = app_root(file)
+
     prev = File.read(path)
     change(path, prev.gsub(old, new))
     sleep 1

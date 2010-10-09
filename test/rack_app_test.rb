@@ -2,22 +2,22 @@ require File.expand_path("./helper", File.dirname(__FILE__))
 
 scope do
   def app_name
-    "helloworld"
+    "rackapp"
   end
 
   setup do
-    "http://localhost:9595"
+    "http://localhost:9696"
   end
 
   test "/hello" do |server|
     assert "Hello" == get(server, "/hello")
   end
 
-  test "/hello when modified" do |server|
-    modify("app.rb", %{"Hello"}, %{"New Hello"}) do
-      assert "New Hello" == get(server, "/hello")
-    end
-  end
+  # test "/hello when modified" do
+  #   modify("app.rb", %{"Hello"}, %{"New Hello"}) do
+  #     assert "New Hello" == get("/hello")
+  #   end
+  # end
 
   test "/article changes when Article is changed" do |server|
     assert "Hello World v1" == get(server, "/article")
@@ -31,7 +31,7 @@ scope do
     assert "Sinatra Book" == get(server, "/book")
 
     modify("lib/book.rb", %{"Sinatra Book"}, %{"Rack Book"}) do
-     assert "Sinatra Book" == get(server, "/book")
+      assert "Sinatra Book" == get(server, "/book")
     end
   end
 end
