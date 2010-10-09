@@ -2,7 +2,7 @@ require File.expand_path("./helper", File.dirname(__FILE__))
 
 scope do
   def app_name
-    "helloworld"
+    "sinatra"
   end
 
   setup do

@@ -1,5 +1,5 @@
 task :start_app do
-  require "./test/fixtures/helloworld/app.rb"
+  require "./test/fixtures/sinatra/app.rb"
   require "./test/fixtures/rackapp/app.rb"
   require "logger"
 
