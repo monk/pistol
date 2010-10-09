@@ -1,5 +1,6 @@
 task :start_app do
   require "./test/fixtures/helloworld/app.rb"
+  require "./test/fixtures/rackapp/app.rb"
   require "logger"
 
   Thread.new do
@@ -9,6 +10,15 @@ task :start_app do
       :AccessLog => []
     )
   end
+
+  Thread.new do
+    Rack::Handler::WEBrick.run(RackApp.to_app,
+      :Port => 9696,
+      :Logger => ::Logger.new(File.open("/dev/null", "w")),
+      :AccessLog => []
+    )
+  end
+
 
   # Let's simply wait for the sinatra app to start.
   sleep 2
