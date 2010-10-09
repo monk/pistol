@@ -3,12 +3,22 @@ require "open-uri"
 require "fileutils"
 
 class Cutest::Scope
-  def get(server, path)
+  def app(app = nil)
+    @app = app if app
+    @app
+  end
+
+  def server(server = nil)
+    @server = server if server
+    @server
+  end
+
+  def get(path)
     open([server, path].join).read
   end
 
   def app_root(*args)
-    File.join(File.dirname(__FILE__), "fixtures", app_name, *args)
+    File.join(File.dirname(__FILE__), "fixtures", app, *args)
   end
 
   def modify(file, old, new)
@@ -20,7 +30,13 @@ class Cutest::Scope
     FileUtils.touch(path)
     yield
   ensure
-    change(app_root(file), prev)
+    change(path, prev)
+  end
+
+  def updated(file)
+    sleep 1
+    FileUtils.touch(app_root(file))
+    yield
   end
 
   def change(file, data)

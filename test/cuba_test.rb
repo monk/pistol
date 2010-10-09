@@ -1,18 +1,18 @@
 require File.expand_path("./helper", File.dirname(__FILE__))
 
 scope do
-  app    "sinatra"
-  server "http://localhost:9595"
+  app    "cuba"
+  server "http://localhost:9797"
 
   test "/hello" do
     assert "Hello" == get("/hello")
   end
 
-  test "/hello when modified" do
-    modify("app.rb", %{"Hello"}, %{"New Hello"}) do
-      assert "New Hello" == get("/hello")
-    end
-  end
+  # test "/hello when modified" do
+  #   modify("app.rb", %{"Hello"}, %{"New Hello"}) do
+  #     assert "New Hello" == get("/hello")
+  #   end
+  # end
 
   test "/article changes when Article is changed" do
     assert "Hello World v1" == get("/article")

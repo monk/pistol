@@ -1,16 +1,11 @@
 require File.expand_path("./helper", File.dirname(__FILE__))
 
 scope do
-  def app_name
-    "rackapp"
-  end
+  app    "rackapp"
+  server "http://localhost:9696"
 
-  setup do
-    "http://localhost:9696"
-  end
-
-  test "/hello" do |server|
-    assert "Hello" == get(server, "/hello")
+  test "/hello" do
+    assert "Hello" == get("/hello")
   end
 
   # test "/hello when modified" do
@@ -19,19 +14,21 @@ scope do
   #   end
   # end
 
-  test "/article changes when Article is changed" do |server|
-    assert "Hello World v1" == get(server, "/article")
+  test "/article changes when Article is changed" do
+    updated("app/article.rb") do
+      assert "Hello World v1" == get("/article")
+    end
 
     modify("app/article.rb", %{"Hello World v1"}, %{"Hello World v2"}) do
-      assert "Hello World v2" == get(server, "/article")
+      assert "Hello World v2" == get("/article")
     end
   end
 
-  test "/book doesn't change since Book is in lib" do |server|
-    assert "Sinatra Book" == get(server, "/book")
+  test "/book doesn't change since Book is in lib" do
+    assert "Sinatra Book" == get("/book")
 
     modify("lib/book.rb", %{"Sinatra Book"}, %{"Rack Book"}) do
-      assert "Sinatra Book" == get(server, "/book")
+      assert "Sinatra Book" == get("/book")
     end
   end
 end
