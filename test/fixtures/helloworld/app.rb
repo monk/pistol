@@ -7,7 +7,10 @@ class App < Sinatra::Base
   set :root, lambda { |*args| File.join(File.dirname(__FILE__), *args) }
   set :port, 9595
 
-  use Pistol, :files => Dir[__FILE__, root("app/**/*.rb")]
+  use Pistol, Dir[__FILE__, root("app/**/*.rb")] do
+    self.reset!
+    require __FILE__
+  end
 
   get "/hello" do
     "Hello"

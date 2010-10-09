@@ -1,13 +1,11 @@
 class Pistol
   VERSION = "0.0.1"
 
-  attr :options
-
-  def initialize(app, options = {})
-    @options  = optimize_options(options)
-    @app      = app
-    @app_file = options[:files].first
-    @last     = last_mtime
+  def initialize(app, files, &block)
+    @app   = app
+    @files = files.map { |file| File.expand_path(file) }
+    @block = block
+    @last  = last_mtime
   end
 
   def call(env)
@@ -28,20 +26,11 @@ class Pistol
 
 private
   def reload!
-    options[:files].each { |file| $LOADED_FEATURES.delete(file) }
-
-    @app.class.reset! if @app.class.respond_to?(:reset!)
-    require @app_file
+    @files.each { |file| $LOADED_FEATURES.delete(file) }
+    @block.call if @block
   end
 
   def last_mtime
-    options[:files].map { |file| ::File.mtime(file) }.max
-  end
-
-  def optimize_options(options)
-    opts = options.dup
-    opts[:files] ||= Dir["./app/**/*.rb"]
-    opts[:files].map! { |file| File.expand_path(file) }
-    opts
+    @files.map { |file| ::File.mtime(file) }.max
   end
 end
