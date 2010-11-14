@@ -1,5 +1,5 @@
 class Pistol
-  VERSION = "0.0.1"
+  VERSION = "0.0.2"
 
   def initialize(app, files, &block)
     @app   = app
@@ -27,7 +27,11 @@ class Pistol
 private
   def reload!
     @files.each { |file| $LOADED_FEATURES.delete(file) }
-    @block.call if @block
+    @block.call(changed) if @block
+  end
+
+  def changed
+    @files.select { |file| ::File.mtime(file) > @last }
   end
 
   def last_mtime
